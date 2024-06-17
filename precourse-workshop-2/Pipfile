@@ -8,6 +8,9 @@ requests = "*"
 pandas = "*"
 scikit-learn = "*"
 jupyter = "*"
+transformers = "*"
+tqdm = "*"
+torch = "*"
 
 [dev-packages]
 
