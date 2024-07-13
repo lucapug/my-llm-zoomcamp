@@ -8,6 +8,8 @@ tqdm = "*"
 notebook = "==7.1.2"
 sentence-transformers = "==2.7.0"
 elasticsearch = "*"
+openai = "*"
+pandas = "*"
 
 [dev-packages]
 
