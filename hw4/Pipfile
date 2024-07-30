@@ -10,6 +10,7 @@ sentence-transformers = "==2.7.0"
 elasticsearch = "*"
 openai = "*"
 pandas = "*"
+rouge = "*"
 
 [dev-packages]
 
