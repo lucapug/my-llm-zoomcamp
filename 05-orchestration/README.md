@@ -1,1 +1,1 @@
-In questo modulo si crea una pipeline con Mage per gestire la componente di data preparation (ingestion, transformation, exporting, indexing). Il codice del modulo è in questo repository clonato da quello dell'istruttore.
+In questo modulo si crea una pipeline con Mage per gestire la componente di data preparation (ingestion, transformation, exporting, indexing). Il codice del modulo è in [questo repository](https://github.com/lucapug/rag-project) forked da quello dell'istruttore.
