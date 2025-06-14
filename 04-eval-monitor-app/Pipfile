@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+tqdm = "*"
+sentence-transformers = "==2.7.0"
+elasticsearch = "*"
+pandas = "*"
+requests = "*"
+psycopg2-binary = "*"
+python-dotenv = "*"
+pgcli = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
