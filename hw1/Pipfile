@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-elasticsearch = "==8.17.6"
+elasticsearch = "*"
 requests = "*"
 notebook = "==7.1.2"
 tiktoken = "*"
@@ -13,4 +13,4 @@ openai = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
