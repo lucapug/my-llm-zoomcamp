@@ -4,13 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-elasticsearch = "*"
+elasticsearch = "==8.17.6"
 requests = "*"
 notebook = "==7.1.2"
 tiktoken = "*"
 openai = "*"
+ipykernel = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = "3.10"
