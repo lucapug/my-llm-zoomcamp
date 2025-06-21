@@ -1,7 +1,7 @@
 [project]
 name = "02-2025-vector-search"
 version = "0.1.0"
-description = "Add your description here"
+description = "LLM zoomcamp 2025:Modulo 2 vector-search"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
