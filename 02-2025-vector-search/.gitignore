@@ -1,2 +1,4 @@
 # direnv
 .envrc
+# local env files
+.env
