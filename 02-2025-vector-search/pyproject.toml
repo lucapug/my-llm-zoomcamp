@@ -5,6 +5,7 @@ description = "LLM zoomcamp 2025:Modulo 2 vector-search"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "anthropic>=0.54.0",
     "ipykernel>=6.29.5",
     "minsearch>=0.0.3",
     "notebook>=7.4.3",
