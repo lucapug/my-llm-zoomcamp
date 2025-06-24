@@ -2,3 +2,5 @@
 .envrc
 # local env files
 .env
+# qdrant
+qdrant_storage
