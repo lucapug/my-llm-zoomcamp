@@ -11,11 +11,11 @@ def get_data(locations):
             if not page.endswith(".txt"):
                 continue
             print("Getting", page, "\n")
-            with open(f"{location}\{page}", "r", encoding="utf-8") as f:
+            with open(f"{location}/{page}", "r", encoding="utf-8") as f:  # Cambiato \ con /
                 content = f.read()
             yield {
-                "source_name": location.split("\\")[-1], # like api.slack.com
-                "node_set_category": location.split("\\")[-1], # like api.slack.com
+                "source_name": location.split("/")[-1], # Cambiato \ con /
+                "node_set_category": location.split("/")[-1], # Cambiato \ con /
                 "filename": page, # filename
                 "content": content  # content of the page
             }
@@ -24,10 +24,10 @@ def get_data(locations):
 if __name__ == "__main__":
     # MY CUSTOM FILES
     source_locations = [
-        "data\\api.slack.com",
-        "data\\developer.monday.com",
-        "data\\developer.paypal.com",
-        "data\\developer.ticketmaster.com"
+        "data_samples/api.slack.com",          # Cambiato \ con /
+        "data_samples/developer.monday.com",   # Cambiato \ con /
+        "data_samples/developer.paypal.com",   # Cambiato \ con /
+        "data_samples/developer.ticketmaster.com"  # Cambiato \ con /
     ]
 
     pipeline = dlt.pipeline(

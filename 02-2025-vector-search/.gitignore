@@ -4,3 +4,5 @@
 .env
 # qdrant
 qdrant_storage
+# dlt sources_db
+dlt-workshop-2025/dlt/sources_db
