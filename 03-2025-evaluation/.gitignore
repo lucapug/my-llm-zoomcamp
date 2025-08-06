@@ -1,0 +1,5 @@
+# local env files
+.env
+# qdrant
+qdrant_storage
+db.qdrant
