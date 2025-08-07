@@ -35,7 +35,7 @@ def _(pd, requests):
     df_ground_truth = pd.read_csv(ground_truth_url)
 
     ground_truth = df_ground_truth.to_dict(orient='records')
-    return documents, ground_truth
+    return documents, ground_truth, url_prefix
 
 
 @app.cell(hide_code=True)
@@ -345,11 +345,11 @@ def _(collection_name, points, qd_client):
 def _(collection_name, model_handle, models, qd_client):
     def vector_search3(q):  # q è un dizionario dal ground_truth
         #print('vector_search is used')
-    
+
         # Estrai la domanda e il corso dal dizionario
         question = q['question']  # ✅ Estrai la stringa della domanda
         course = q['course']      # ✅ Usa il corso dal ground_truth invece di hardcodarlo
-    
+
         query_points = qd_client.query_points(
             collection_name=collection_name,
             query=models.Document(
@@ -367,12 +367,12 @@ def _(collection_name, model_handle, models, qd_client):
             limit=5,
             with_payload=True
         )
-    
+
         results = []
-    
+
         for point in query_points.points:
             results.append(point.payload)
-    
+
         return results
     return (vector_search3,)
 
@@ -381,6 +381,134 @@ def _(collection_name, model_handle, models, qd_client):
 def _(evaluate, ground_truth, vector_search3):
     # Valuta la ricerca vettoriale
     evaluate(ground_truth, vector_search3)
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""### RAG offline evaluation: cosine similarity ###""")
+    return
+
+
+@app.cell
+def _():
+    import numpy as np
+    def cosine(u, v):
+        u_norm = np.sqrt(u.dot(u))
+        v_norm = np.sqrt(v.dot(v))
+        return u.dot(v) / (u_norm * v_norm)
+    return cosine, np
+
+
+@app.cell
+def _(pd, url_prefix):
+    # load data from gpt-4o-mini evaluation (llm as a judge)
+
+    results_url = url_prefix + 'rag_evaluation/data/results-gpt4o-mini.csv'
+    df_results = pd.read_csv(results_url)
+    return (df_results,)
+
+
+@app.cell
+def _(df_results):
+    df_results.head(3)  # show first 3 rows of the dataframe
+    return
+
+
+@app.cell
+def _(pipeline):
+    pipeline
+    return
+
+
+@app.cell
+def _(df_results, pipeline):
+    X1 = pipeline.fit(df_results.answer_llm + ' ' + df_results.answer_orig + ' ' + df_results.question)
+    return (X1,)
+
+
+@app.cell
+def _(df_results):
+    results_gpt4o_mini = df_results.to_dict(orient='records')
+    return (results_gpt4o_mini,)
+
+
+@app.cell
+def _(X1, cosine):
+    def compute_similarity(record):
+        answer_orig = record['answer_orig']
+        answer_llm = record['answer_llm']
+
+        v_llm = X1.transform([answer_llm])
+        v_orig = X1.transform([answer_orig])
+
+        return cosine(v_llm[0], v_orig[0])
+    return (compute_similarity,)
+
+
+@app.cell
+def _(compute_similarity, results_gpt4o_mini, tqdm):
+    similarity_4o_mini = []
+
+    for record in tqdm(results_gpt4o_mini):
+        sim = compute_similarity(record)
+        similarity_4o_mini.append(sim)
+    return (similarity_4o_mini,)
+
+
+@app.cell
+def _(similarity_4o_mini):
+    similarity_4o_mini[:3]  # show first 3 similarity scores
+    return
+
+
+@app.cell
+def _(df_results, similarity_4o_mini):
+    df_results['cosine_similarity'] = similarity_4o_mini
+    df_results.head(3)  # show first 3 rows of the dataframe with cosine similarity']
+    return
+
+
+@app.cell
+def _(df_results):
+    df_results['cosine_similarity'].mean()  # mean cosine similarity score
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""### Alternative text similarity: Rouge ###""")
+    return
+
+
+@app.cell
+def _(df_results):
+    from rouge import Rouge
+    rouge_scorer = Rouge()
+
+    r = df_results.iloc[10]
+    scores = rouge_scorer.get_scores(r.answer_llm, r.answer_orig)[0]
+    scores
+    return rouge_scorer, scores
+
+
+@app.cell
+def _(scores):
+    scores['rouge-1']['f']  # F1 score for Rouge-L
+    return
+
+
+@app.cell
+def _(df_results, np, rouge_scorer):
+    tot_scores = []
+
+    for i1 in range(df_results.shape[0]):
+        r1 = df_results.iloc[i1]
+        scores1 = rouge_scorer.get_scores(r1.answer_llm, r1.answer_orig)[0]
+        tot_scores.append(scores1['rouge-1']['f'])
+
+    np.mean(tot_scores)  # mean Rouge-1 F1 score
+
     return
 
 
